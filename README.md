@@ -9,7 +9,7 @@ First start instruction
 Routes to use
 ------
 
-```translations/number_of_pages``` Return n first translation, where n i s number of pages.
+```translations/number_of_page``` Return paged translations, where n is number of pages (so far 20 records per page).
 
 ```[source_language]/[destination_language]/word_to_translate``` Translate word from source language to destination language.
 
