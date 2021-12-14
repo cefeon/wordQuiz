@@ -18,6 +18,6 @@ public class WordPl {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "WordPl_ID_Generator")
     private int id;
 
-    @Column(name = "word", nullable = false, length = 10000)
+    @Column(name = "word", nullable = false, unique = true, length = 10000)
     private String word;
 }

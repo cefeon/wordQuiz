@@ -43,19 +43,19 @@ public class LoadCSVService {
 
     public void saveListToDatabase() throws IOException {
         List<TranslationPlEng> translations = this.CSVToList("ang_pol.csv");
-        translations = translations.stream().limit(10000).collect(Collectors.toList());
-        setEqualTranslationsToSameObject(translations);
+        //translations = translations.stream().limit(10000).collect(Collectors.toList());
+        setEqualPLTranslationsToSameObjects(translations);
         translationPlEngRepository.saveAll(translations);
     }
 
-    private void setEqualTranslationsToSameObject(List<TranslationPlEng> translations) {
-        Set<String> duplicatedWordsPl = getTranslationsWithoutDuplicates(translations);
-        List<WordPl> wordPlList = duplicatedWordsPl.stream().map(x -> WordPl.builder().word(x).build()).collect(Collectors.toList());
+    private void setEqualPLTranslationsToSameObjects(List<TranslationPlEng> translations) {
+        Set<String> duplicatedWordsPl = getPLTranslationswithoutDuplicates(translations);
+        List<WordPl> wordsPL = duplicatedWordsPl.stream().map(x -> WordPl.builder().word(x).build()).collect(Collectors.toList());
         translations.stream().filter(x -> duplicatedWordsPl.contains(x.getPl().getWord())).forEach(x ->
-                wordPlList.stream().filter(y -> y.getWord().equals(x.getPl().getWord())).forEach(x::setPl));
+                wordsPL.stream().filter(y -> y.getWord().equals(x.getPl().getWord())).forEach(x::setPl));
     }
 
-    public Set<String> getTranslationsWithoutDuplicates(List<TranslationPlEng> translations) {
+    public Set<String> getPLTranslationswithoutDuplicates(List<TranslationPlEng> translations) {
         List<String> wordsPL = translations.stream()
                 .map(x -> x.getPl().getWord()).collect(Collectors.toList());
         Set<String> duplicatedWordsPlRemoveset = new HashSet<>();
