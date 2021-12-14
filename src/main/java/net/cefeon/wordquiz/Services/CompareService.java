@@ -28,12 +28,11 @@ public class CompareService {
                 .findDistinctByEn_Word(enWord).stream()
                 .map(TranslationPlEng::getPl).collect(Collectors.toList());
 
-        String databaseWord = translations.get(0).getWord();
         List<CompareResult> compareResults = new ArrayList<>();
         translations.forEach(x-> compareResults.add(CompareResult.builder()
                 .englishWord(enWord)
                 .wordToTest(wordToTest)
-                .polishWord(databaseWord)
+                .polishWord(x.getWord())
                 .score(jw.similarity(x.getWord(),wordToTest))
                 .build()));
         Collections.sort(compareResults);
@@ -47,12 +46,11 @@ public class CompareService {
                 .findDistinctByPl_Word(plWord).stream()
                 .map(TranslationPlEng::getEn).collect(Collectors.toList());
 
-        String databaseWord = translations.get(0).getWord();
         List<CompareResult> compareResults = new ArrayList<>();
         translations.forEach(x-> compareResults.add(CompareResult.builder()
-                .englishWord(plWord)
+                .polishWord(plWord)
                 .wordToTest(wordToTest)
-                .polishWord(databaseWord)
+                .englishWord(x.getWord())
                 .score(jw.similarity(x.getWord(),wordToTest))
                 .build()));
         Collections.sort(compareResults);
