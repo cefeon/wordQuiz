@@ -29,8 +29,8 @@ public class TranslationPlEng {
     @JoinColumn(name = "en_id", nullable = false)
     private WordEn en;
 
-    public TranslationPlEng(String wordEn, String wordPl) {
-        this.pl = WordPl.builder().word(wordPl).build();
-        this.en = WordEn.builder().word(wordEn).build();
+    public TranslationPlEng(WordEn wordEn, WordPl wordPl) {
+        this.pl = wordPl;
+        this.en = wordEn;
     }
 }

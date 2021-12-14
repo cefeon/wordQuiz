@@ -3,15 +3,14 @@ package net.cefeon.wordquiz.Services;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import net.cefeon.wordquiz.Model.TranslationPlEng;
+import net.cefeon.wordquiz.Model.WordEn;
+import net.cefeon.wordquiz.Model.WordPl;
 import net.cefeon.wordquiz.Repository.TranslationPlEngRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StopWatch;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,13 +22,15 @@ public class LoadCSVService {
     }
 
     public List<TranslationPlEng> CSVToList(String filename) throws IOException {
-        FileReader fileReader = new FileReader("./src/main/resources/"+filename);
+        FileReader fileReader = new FileReader("./src/main/resources/" + filename);
         try (CSVReader reader = new CSVReader(fileReader)) {
             List<TranslationPlEng> translations = new ArrayList<>();
             String[] line;
             while ((line = reader.readNext()) != null) {
                 if (!(line[0].equals("") || line[1].equals(""))) {
-                    TranslationPlEng translationPlEng = new TranslationPlEng(line[0],line[1]);
+                    WordEn wordEn = WordEn.builder().word(line[0]).build();
+                    WordPl wordPl = WordPl.builder().word(line[1]).build();
+                    TranslationPlEng translationPlEng = new TranslationPlEng(wordEn, wordPl);
                     translations.add(translationPlEng);
                 }
             }
@@ -42,7 +43,22 @@ public class LoadCSVService {
 
     public void saveListToDatabase() throws IOException {
         List<TranslationPlEng> translations = this.CSVToList("ang_pol.csv");
-        //translations = translations.stream().limit(20).collect(Collectors.toList());
+        translations = translations.stream().limit(10000).collect(Collectors.toList());
+        setEqualTranslationsToSameObject(translations);
         translationPlEngRepository.saveAll(translations);
+    }
+
+    private void setEqualTranslationsToSameObject(List<TranslationPlEng> translations) {
+        Set<String> duplicatedWordsPl = getTranslationsWithoutDuplicates(translations);
+        List<WordPl> wordPlList = duplicatedWordsPl.stream().map(x -> WordPl.builder().word(x).build()).collect(Collectors.toList());
+        translations.stream().filter(x -> duplicatedWordsPl.contains(x.getPl().getWord())).forEach(x ->
+                wordPlList.stream().filter(y -> y.getWord().equals(x.getPl().getWord())).forEach(x::setPl));
+    }
+
+    public Set<String> getTranslationsWithoutDuplicates(List<TranslationPlEng> translations) {
+        List<String> wordsPL = translations.stream()
+                .map(x -> x.getPl().getWord()).collect(Collectors.toList());
+        Set<String> duplicatedWordsPlRemoveset = new HashSet<>();
+        return wordsPL.stream().filter(word -> !duplicatedWordsPlRemoveset.add(word)).collect(Collectors.toSet());
     }
 }
