@@ -1,11 +1,11 @@
-package net.cefeon.wordquiz.Services;
+package net.cefeon.wordquiz.service;
 
 import info.debatty.java.stringsimilarity.JaroWinkler;
-import net.cefeon.wordquiz.Model.TranslationPlEng;
-import net.cefeon.wordquiz.Model.WordEn;
-import net.cefeon.wordquiz.Model.WordPl;
-import net.cefeon.wordquiz.NonModel.CompareResult;
-import net.cefeon.wordquiz.Repository.TranslationPlEngRepository;
+import net.cefeon.wordquiz.model.TranslationPlEng;
+import net.cefeon.wordquiz.model.WordEn;
+import net.cefeon.wordquiz.model.WordPl;
+import net.cefeon.wordquiz.nonmodel.CompareResult;
+import net.cefeon.wordquiz.repository.TranslationPlEngRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

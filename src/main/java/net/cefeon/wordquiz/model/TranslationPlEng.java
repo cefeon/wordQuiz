@@ -1,4 +1,4 @@
-package net.cefeon.wordquiz.Model;
+package net.cefeon.wordquiz.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

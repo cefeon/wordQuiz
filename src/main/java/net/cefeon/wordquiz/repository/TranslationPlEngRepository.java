@@ -1,6 +1,6 @@
-package net.cefeon.wordquiz.Repository;
+package net.cefeon.wordquiz.repository;
 
-import net.cefeon.wordquiz.Model.TranslationPlEng;
+import net.cefeon.wordquiz.model.TranslationPlEng;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

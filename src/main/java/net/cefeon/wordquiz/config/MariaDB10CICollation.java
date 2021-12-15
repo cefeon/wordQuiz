@@ -1,4 +1,4 @@
-package net.cefeon.wordquiz.Config;
+package net.cefeon.wordquiz.config;
 
 import org.hibernate.dialect.MariaDB10Dialect;
 

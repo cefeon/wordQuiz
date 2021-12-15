@@ -1,11 +1,11 @@
-package net.cefeon.wordquiz.Services;
+package net.cefeon.wordquiz.service;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import net.cefeon.wordquiz.Model.TranslationPlEng;
-import net.cefeon.wordquiz.Model.WordEn;
-import net.cefeon.wordquiz.Model.WordPl;
-import net.cefeon.wordquiz.Repository.TranslationPlEngRepository;
+import net.cefeon.wordquiz.model.TranslationPlEng;
+import net.cefeon.wordquiz.model.WordEn;
+import net.cefeon.wordquiz.model.WordPl;
+import net.cefeon.wordquiz.repository.TranslationPlEngRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
@@ -21,7 +21,7 @@ public class LoadCSVService {
         this.translationPlEngRepository = translationPlEngRepository;
     }
 
-    public List<TranslationPlEng> CSVToList(String filename) throws IOException {
+    public List<TranslationPlEng> csvToList(String filename) throws IOException {
         FileReader fileReader = new FileReader("./src/main/resources/" + filename);
         try (CSVReader reader = new CSVReader(fileReader)) {
             List<TranslationPlEng> translations = new ArrayList<>();
@@ -42,20 +42,20 @@ public class LoadCSVService {
     }
 
     public void saveListToDatabase() throws IOException {
-        List<TranslationPlEng> translations = this.CSVToList("ang_pol.csv");
+        List<TranslationPlEng> translations = this.csvToList("ang_pol.csv");
         //translations = translations.stream().limit(10000).collect(Collectors.toList());
         setEqualPLTranslationsToSameObjects(translations);
         translationPlEngRepository.saveAll(translations);
     }
 
     private void setEqualPLTranslationsToSameObjects(List<TranslationPlEng> translations) {
-        Set<String> duplicatedWordsPl = getPLTranslationswithoutDuplicates(translations);
+        Set<String> duplicatedWordsPl = getPLTranslationsWithoutDuplicates(translations);
         List<WordPl> wordsPL = duplicatedWordsPl.stream().map(x -> WordPl.builder().word(x).build()).collect(Collectors.toList());
         translations.stream().filter(x -> duplicatedWordsPl.contains(x.getPl().getWord())).forEach(x ->
                 wordsPL.stream().filter(y -> y.getWord().equals(x.getPl().getWord())).forEach(x::setPl));
     }
 
-    public Set<String> getPLTranslationswithoutDuplicates(List<TranslationPlEng> translations) {
+    public Set<String> getPLTranslationsWithoutDuplicates(List<TranslationPlEng> translations) {
         List<String> wordsPL = translations.stream()
                 .map(x -> x.getPl().getWord()).collect(Collectors.toList());
         Set<String> duplicatedWordsPlRemoveset = new HashSet<>();
