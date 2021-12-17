@@ -1,6 +1,5 @@
 package net.cefeon.wordquiz.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.cefeon.wordquiz.model.TestResult;
 import net.cefeon.wordquiz.model.TranslationPlEng;
 import net.cefeon.wordquiz.model.WordQuizUser;
@@ -13,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,11 +29,6 @@ public class TestResultService {
 
     public List<TestResult> getWordStatsForCurrentUser(String englishWord) {
         return testResultRepository.findDistinctByReview_WordQuizUser_UserNameAndTranslationPlEng_En_Word(getAuthenticatedUser().getUserName(), englishWord);
-    }
-
-    public Map<TranslationPlEng, List<TestResult>> getAllWordsForCurrentUser() {
-        List<TestResult> testResults = testResultRepository.findDistinctByReview_WordQuizUser_UserName(getAuthenticatedUser().getUserName());
-        return testResults.stream().collect(Collectors.groupingBy(TestResult::getTranslationPlEng));
     }
 
     public List<ResultJSONHelper> getResultsForCurrentUser() {

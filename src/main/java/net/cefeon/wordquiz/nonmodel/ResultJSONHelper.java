@@ -17,7 +17,10 @@ public class ResultJSONHelper {
     public ResultJSONHelper(TranslationPlEng translationPlEng, Double score, LocalDateTime lastReviewDate) {
         this.translationPlEng = translationPlEng;
         this.score = score <= 0 ? 0 : score;
+
+        /*Calculates repetition system time for particular score level*/
         double hoursToAdd = (4 + 4 * ((this.score + 2) % 2)) * Math.pow(6, (0.5 * (this.score + 1) - (1 + (this.score + 2) % 2) / 2));
+
         this.nextReviewDate = lastReviewDate.plusHours((long) hoursToAdd);
     }
 }
