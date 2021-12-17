@@ -4,9 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Table(name = "WORD_PL", uniqueConstraints = {
-        @UniqueConstraint(name = "WORD_PL_id_uindex", columnNames = {"id"})
-})
+@Table(name = "word_pl")
 @Entity
 @Getter
 @Setter
@@ -16,8 +14,9 @@ import javax.persistence.*;
 public class WordPl {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "WordPl_ID_Generator")
+    @Column(name = "word_pl_id")
     private int id;
 
-    @Column(name = "word", nullable = false, unique = true, length = 10000)
+    @Column(nullable = false, unique = true, length = 10000)
     private String word;
 }

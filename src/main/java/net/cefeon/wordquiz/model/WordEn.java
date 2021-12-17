@@ -4,7 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Table(name = "WORD_EN")
+@Table(name = "word_en")
 @Entity
 @Builder
 @NoArgsConstructor
@@ -14,8 +14,9 @@ import javax.persistence.*;
 public class WordEn {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "WordEn_ID_Generator")
+    @Column(name = "word_en_id")
     private int id;
 
-    @Column(name = "word", nullable = false, length = 10000)
+    @Column(nullable = false, length = 10000)
     private String word;
 }

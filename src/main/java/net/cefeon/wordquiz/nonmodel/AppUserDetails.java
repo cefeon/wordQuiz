@@ -1,6 +1,6 @@
 package net.cefeon.wordquiz.nonmodel;
 
-import net.cefeon.wordquiz.model.User;
+import net.cefeon.wordquiz.model.WordQuizUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,16 +12,16 @@ import java.util.stream.Collectors;
 
 public class AppUserDetails implements UserDetails {
 
-    private String userName;
-    private String password;
-    private boolean active;
-    private List<GrantedAuthority> authorithies;
+    private final String userName;
+    private final String password;
+    private final boolean active;
+    private final List<GrantedAuthority> authorithies;
 
-    public AppUserDetails(User user) {
-        this.userName = user.getUserName();
-        this.password = user.getPassword();
-        this.active = user.isActive();
-        this.authorithies = Arrays.stream(user.getAuthority().split(","))
+    public AppUserDetails(WordQuizUser wordQuizUser) {
+        this.userName = wordQuizUser.getUserName();
+        this.password = wordQuizUser.getPassword();
+        this.active = wordQuizUser.isActive();
+        this.authorithies = Arrays.stream(wordQuizUser.getAuthority().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
