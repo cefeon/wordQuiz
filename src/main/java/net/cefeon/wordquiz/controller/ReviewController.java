@@ -14,9 +14,5 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @PostMapping("/review/add/{date}")
-    public String addReview(@PathVariable String date) {
-        reviewService.addOrUpdateForCurrentUser(date);
-        return "Review added with success";
-    }
+
 }

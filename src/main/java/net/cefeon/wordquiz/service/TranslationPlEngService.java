@@ -33,4 +33,8 @@ public class TranslationPlEngService {
         return translationPlEngRepository.findDistinctByPl_Word(word).stream()
                 .map(TranslationPlEng::getEn).collect(Collectors.toList());
     }
+
+    public List<TranslationPlEng> getTranslationByEnglishWord(String englishWord){
+        return translationPlEngRepository.findDistinctByEn_Word(englishWord);
+    }
 }

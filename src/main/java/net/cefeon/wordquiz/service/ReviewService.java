@@ -30,13 +30,19 @@ public class ReviewService {
         return reviewRepository.findFirstByWordQuizUser_UserName(getAuthenticatedUser().getUserName());
     }
 
-    public void addOrUpdateForCurrentUser(String date) {
+    public Review addOrUpdateForCurrentUser(LocalDateTime date) {
         Review review = Review.builder()
-                .date(LocalDateTime.parse(date))
+                .date(date)
                 .wordQuizUser(getAuthenticatedUser())
                 .build();
-        getFirstForCurrentUser().ifPresent(x -> review.setId(x.getId()));
+        getFirstForCurrentUser().ifPresent(x -> {
+            if (date.isBefore(x.getDate().plusDays(1))){
+                review.setId(x.getId());
+            }
+        });
+
         reviewRepository.save(review);
+        return review;
     }
 
     private WordQuizUser getAuthenticatedUser() {

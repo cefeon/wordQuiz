@@ -30,4 +30,7 @@ public class TestResult {
 
     @Column(name = "score")
     private Double score;
+
+    @Column(name = "answered")
+    private Boolean answered;
 }
