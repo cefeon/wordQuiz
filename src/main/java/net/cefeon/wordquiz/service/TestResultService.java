@@ -7,21 +7,16 @@ import net.cefeon.wordquiz.model.WordQuizUser;
 import net.cefeon.wordquiz.nonmodel.ResultJSONHelper;
 import net.cefeon.wordquiz.repository.TestResultRepository;
 import net.cefeon.wordquiz.repository.WordQuizUserRepository;
-import org.aspectj.weaver.ast.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.el.PropertyNotFoundException;
-import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static org.apache.logging.log4j.ThreadContext.isEmpty;
 
 @Service
 public class TestResultService {
@@ -43,6 +38,16 @@ public class TestResultService {
 
     public List<ResultJSONHelper> getResultsForCurrentUser() {
         List<TestResult> testResults = testResultRepository.findDistinctByReview_WordQuizUser_UserName(getAuthenticatedUser().getUserName());
+        return resultToResultJSONHelper(testResults);
+    }
+
+    public List<ResultJSONHelper> getWordsToReviewForCurrentUser() {
+        List<TestResult> testResults = testResultRepository.findDistinctByReview_WordQuizUser_UserName(getAuthenticatedUser().getUserName());
+        testResults = testResults.stream().filter(x -> !x.getAnswered()).collect(Collectors.toList());
+        return resultToResultJSONHelper(testResults);
+    }
+
+    private List<ResultJSONHelper> resultToResultJSONHelper(List<TestResult> testResults) {
         Map<TranslationPlEng, Double> results = testResults.stream()
                 .collect(Collectors.groupingBy(TestResult::getTranslationPlEng, Collectors.summingDouble(x -> x.getResult().equals(Boolean.TRUE) ? 1 : -0.5)));
         return results.entrySet().stream()
@@ -60,19 +65,19 @@ public class TestResultService {
         return testResultRepository.findDistinctByReview_WordQuizUser_UserNameAndTranslationPlEng_En_WordOrderByReviewDateDesc(getAuthenticatedUser().getUserName(), englishWord).get(0).getReview().getDate();
     }
 
-    public List<TestResult> getUnansweredForCurrentUser(String englishWord){
+    public Boolean isWordUnanswered(String englishWord) {
         List<TestResult> testResults = this.getWordStatsForCurrentUser(englishWord);
-        return testResults.stream().filter(x-> !x.getAnswered()).collect(Collectors.toList());
+        return testResults.stream().anyMatch(x -> !x.getAnswered());
     }
 
     public TestResult addWordToCurrentUserTest(String englishWord) {
         if (translationPlEngService.getTranslationByEnglishWord(englishWord).isEmpty())
-            return null; //TODO: Should be throwed some error in JSON or statuscode
-        if (!getUnansweredForCurrentUser(englishWord).isEmpty())
-            return null; //TODO: Should be throwed some error in JSON or statuscode
+            return null; //TODO: Error should be thrown in JSON or statuscode
+        if (Boolean.TRUE.equals(isWordUnanswered(englishWord)))
+            return null; //TODO: Error should be thrown in JSON or statuscode
         TranslationPlEng translationPlEng = translationPlEngService.getTranslationByEnglishWord(englishWord).get(0);
 
-        Review review = reviewService.addOrUpdateForCurrentUser(LocalDateTime.now());
+        Review review = reviewService.addOrUpdateForCurrentUser(LocalDateTime.now().withMinute(0));
 
         TestResult testResult = TestResult.builder()
                 .translationPlEng(translationPlEng)

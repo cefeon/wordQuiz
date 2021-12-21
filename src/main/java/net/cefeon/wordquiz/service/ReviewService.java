@@ -36,7 +36,7 @@ public class ReviewService {
                 .wordQuizUser(getAuthenticatedUser())
                 .build();
         getFirstForCurrentUser().ifPresent(x -> {
-            if (date.isBefore(x.getDate().plusDays(1))){
+            if (date.isBefore(x.getDate().plusHours(8))){
                 review.setId(x.getId());
             }
         });

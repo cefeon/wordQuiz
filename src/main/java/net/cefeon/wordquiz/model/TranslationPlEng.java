@@ -25,7 +25,7 @@ public class TranslationPlEng {
     @JoinColumn(name = "word_en_id", nullable = false)
     private WordEn en;
 
-    private int level;
+    private int difficulty;
 
     private boolean mainTranslation;
 

@@ -32,6 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .antMatchers("/user/wordlist/toReview").hasAuthority("ADMIN")
                 .antMatchers("/user/*/*/*").hasAuthority("ADMIN")
                 .antMatchers("/user/wordlist").hasAuthority("ADMIN")
                 .antMatchers("/user/wordlist/**").hasAuthority("ADMIN")

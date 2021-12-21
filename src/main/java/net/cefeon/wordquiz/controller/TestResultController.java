@@ -30,4 +30,9 @@ public class TestResultController {
         testResultService.addWordToCurrentUserTest(englishWord);
         return "New world to test added with success";
     }
+
+    @GetMapping("/user/wordlist/toReview")
+    public List<ResultJSONHelper> getWordsToReview() {
+        return testResultService.getWordsToReviewForCurrentUser();
+    }
 }
