@@ -36,7 +36,7 @@ public class TestResultService {
         Map<TranslationPlEng, Double> results = testResults.stream()
                 .collect(Collectors.groupingBy(TestResult::getTranslationPlEng, Collectors.summingDouble(x -> x.getResult().equals(Boolean.TRUE) ? 1 : -0.5)));
         return results.entrySet().stream()
-                .map(m->new ResultJSONHelper(m.getKey(),m.getValue(), LocalDateTime.now()))
+                .map(m->new ResultJSONHelper(m.getKey(),m.getValue(), getLastReviewDate(getAuthenticatedUser().getUserName(), m.getKey().getEn().getWord())))
                 .collect(Collectors.toList());
     }
 
@@ -44,5 +44,9 @@ public class TestResultService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<WordQuizUser> optionalWordQuizUser = wordQuizUserRepository.findByUserName(authentication.getName());
         return optionalWordQuizUser.orElseThrow(() -> new UsernameNotFoundException("Not found: " + authentication.getName()));
+    }
+
+    private LocalDateTime getLastReviewDate(String userName, String englishWord) {
+        return testResultRepository.findDistinctByReview_WordQuizUser_UserNameAndTranslationPlEng_En_WordOrderByReviewDateDesc(userName, englishWord).get(0).getReview().getDate();
     }
 }

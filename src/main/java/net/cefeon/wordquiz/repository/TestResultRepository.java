@@ -10,4 +10,5 @@ import java.util.List;
 public interface TestResultRepository extends JpaRepository<TestResult, Integer> {
     List<TestResult> findDistinctByReview_WordQuizUser_UserNameAndTranslationPlEng_En_Word (String userName, String en);
     List<TestResult> findDistinctByReview_WordQuizUser_UserName (String userName);
+    List<TestResult> findDistinctByReview_WordQuizUser_UserNameAndTranslationPlEng_En_WordOrderByReviewDateDesc (String userName, String en);
 }

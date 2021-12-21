@@ -11,15 +11,15 @@ import java.time.LocalDateTime;
 public class ResultJSONHelper {
 
     TranslationPlEng translationPlEng;
-    Double score;
+    Double wordLevel;
     LocalDateTime nextReviewDate;
 
-    public ResultJSONHelper(TranslationPlEng translationPlEng, Double score, LocalDateTime lastReviewDate) {
+    public ResultJSONHelper(TranslationPlEng translationPlEng, Double wordLevel, LocalDateTime lastReviewDate) {
         this.translationPlEng = translationPlEng;
-        this.score = score <= 0 ? 0 : score;
+        this.wordLevel = wordLevel <= 0 ? 0 : wordLevel;
 
         /*Calculates repetition system time for particular score level*/
-        double hoursToAdd = (4 + 4 * ((this.score + 2) % 2)) * Math.pow(6, (0.5 * (this.score + 1) - (1 + (this.score + 2) % 2) / 2));
+        double hoursToAdd = (4 + 4 * ((this.wordLevel + 2) % 2)) * Math.pow(6, (0.5 * (this.wordLevel + 1) - (1 + (this.wordLevel + 2) % 2) / 2));
 
         this.nextReviewDate = lastReviewDate.plusHours((long) hoursToAdd);
     }
