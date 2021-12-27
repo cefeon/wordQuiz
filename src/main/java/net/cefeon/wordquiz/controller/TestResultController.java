@@ -28,7 +28,7 @@ public class TestResultController {
     @PostMapping("/user/wordlist/add")
     public String addReview(@RequestParam("englishWord") String englishWord) {
         testResultService.addWordToCurrentUserTest(englishWord);
-        return "New worl to test added with success";
+        return "New word to test added with success";
     }
 
     @GetMapping("/user/wordlist/toReview")
