@@ -55,6 +55,16 @@ public class TestResultService {
                 .collect(Collectors.toList());
     }
 
+    private Double getWordLevelForWord(String englishWord){
+        List<TestResult> testResults = testResultRepository.findDistinctByReview_WordQuizUser_UserNameAndTranslationPlEng_En_Word(getAuthenticatedUser().getUserName(), englishWord);
+        Map<TranslationPlEng, Double> results = testResults.stream()
+                .collect(Collectors.groupingBy(TestResult::getTranslationPlEng, Collectors.summingDouble(x -> x.getResult().equals(Boolean.TRUE) ? 1 : -0.5)));
+        Map.Entry<TranslationPlEng, Double> resultWithScore = results.entrySet().stream().filter(x -> x.getKey().getEn().getWord().equals(englishWord))
+                .findAny()
+                .orElse(null);
+        return resultWithScore.getValue();
+    }
+
     private WordQuizUser getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<WordQuizUser> optionalWordQuizUser = wordQuizUserRepository.findByUserName(authentication.getName());
